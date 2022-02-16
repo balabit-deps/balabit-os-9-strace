@@ -1,0 +1,9 @@
+0001-tests-Omit-some-checks-for-msgctl-and-shmctl-where-a.patch
+02-disable_delay_test
+ptrace-error-verbosity.patch
+kexec_file_load.patch
+0006-s390-Check-infmname-with-IS_ARRAY_ZERO-too.patch
+0007-XFAIL-netlink_crypto.patch
+0008-XFAIL-nlattr_crypto_user_alg.patch
+SKIP-tests-m32.patch
+SKIP-sockopt-timestamp.patch

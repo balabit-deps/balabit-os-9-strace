@@ -9,18 +9,17 @@ include /usr/share/dpkg/architecture.mk
 
 CFLAGS += -Wall -g
 
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-  CFLAGS += -O0
-else
-  CFLAGS += -O2
-endif
+# ioctlsort is compiled with *_FOR_BUILD flags
+export CFLAGS_FOR_BUILD = $(CFLAGS)
+export CPPFLAGS_FOR_BUILD = $(CPPFLAGS)
+export LDFLAGS_FOR_BUILD = $(LDFLAGS)
 
 ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
   NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
   MAKEFLAGS += -j$(NUMJOBS)
 endif
 
-extra_build_targets += build-udeb-stamp
+#extra_build_targets += build-udeb-stamp
 
 arch64_map = i386=x86_64 powerpc=powerpc64 sparc=sparc64 s390=s390x
 ifneq (,$(filter $(DEB_HOST_ARCH)=%, $(arch64_map)))
@@ -36,6 +35,10 @@ else
   CONFIG_OPTS = --build=$(DEB_BUILD_GNU_TYPE) --host=$(DEB_HOST_GNU_TYPE)
 endif
 
+ifeq ($(DEB_HOST_ARCH),ppc64el)
+  CONFIG_OPTS += --disable-gcc-Werror
+endif
+
 all: build
 
 build: build-arch build-indep
@@ -48,7 +51,12 @@ configure:
 
 %-stamp: %/Makefile
 	$(MAKE) -C $*
+
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
+ifeq ($(DEB_HOST_ARCH),arm64)
+	# kexec_file_load only implemented on kernel >= 5.0
+	sed -i -e'/kexec_file_load/ s/^#*/#/' tests/pure_executables.list
+endif
 	$*/src/strace -V
 	$(MAKE) -C $* check VERBOSE=1
 endif
@@ -61,7 +69,7 @@ build/Makefile: configure
 build-udeb/Makefile: configure
 	mkdir -p $(@D)
 	cd $(@D); sh ../configure --enable-mpers=check --prefix=/usr \
-		--disable-stacktrace --without-libiberty $(CONFIG_OPTS)
+		--without-libunwind --without-libiberty $(CONFIG_OPTS)
 
 build64/Makefile: configure
 	mkdir -p $(@D)
@@ -70,7 +78,8 @@ build64/Makefile: configure
 clean:
 	dh_testdir
 	dh_testroot
-	rm -rf build build-udeb build64 debian/strace64.substvars
+	rm -rf build build-udeb build64 strace64.1 debian/strace64.substvars
+	sed -i -e'/kexec_file_load/ s/^#*//' tests/pure_executables.list
 	dh_clean
 
 binary: binary-indep binary-arch

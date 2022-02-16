@@ -1,0 +1,9 @@
+include:
+  - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/salsa-ci.yml
+  - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/pipeline-jobs.yml
+
+variables:
+  # many tests fail on the CI runners but not on buildds
+  DEB_BUILD_OPTIONS: nocheck
+  # not reproducible yet #896016
+  SALSA_CI_DISABLE_REPROTEST: 1

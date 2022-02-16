@@ -1,0 +1,20 @@
+From: Balint Reczey <balint.reczey@canonical.com>
+Date: Thu, 15 Oct 2020 19:33:31 +0200
+Subject: s390: Check infmname with IS_ARRAY_ZERO, too
+
+Otherwise the s390_sthyi test fails showing the zero array.
+---
+ src/s390.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/src/s390.c
++++ b/src/s390.c
+@@ -567,7 +567,7 @@
+ 	}
+ 
+ 	if (!abbrev(tcp)) {
+-		if (name_val || hdr->infmname) {
++		if (name_val || !IS_ARRAY_ZERO(hdr->infmname)) {
+ 			tprint_struct_next();
+ 			PRINT_FIELD_EBCDIC(*hdr, infmname);
+ 		}
