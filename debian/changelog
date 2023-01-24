@@ -1,3 +1,9 @@
+strace (5.16-0ubuntu3bb1) jammy; urgency=medium
+
+  * Balabit patched version
+
+ -- Balabit Platform Team <devnull@dev.null>  Tue, 24 Jan 2023 20:31:41 +0100
+
 strace (5.16-0ubuntu3) jammy; urgency=medium
 
   * Configure with --disable-gcc-Werror on ppc64el.
