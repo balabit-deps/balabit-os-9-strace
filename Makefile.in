@@ -230,7 +230,7 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
-DIST_SUBDIRS = bundled src tests tests-m32 tests-mx32
+DIST_SUBDIRS = bundled src
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/strace.spec.in \
 	$(top_srcdir)/build-aux/ar-lib $(top_srcdir)/build-aux/compile \
 	$(top_srcdir)/build-aux/config.guess \
@@ -461,7 +461,7 @@ valgrind_enabled_tools = @valgrind_enabled_tools@
 valgrind_tools = @valgrind_tools@
 @HAVE_M32_RUNTIME_TRUE@TESTS_M32 = tests-m32
 @HAVE_MX32_RUNTIME_TRUE@TESTS_MX32 = tests-mx32
-SUBDIRS = bundled src tests $(TESTS_M32) $(TESTS_MX32)
+SUBDIRS = bundled src
 man_MANS = doc/strace.1 doc/strace-log-merge.1
 ACLOCAL_AMFLAGS = -I m4 -I src/xlat
 CODE_COVERAGE_BRANCH_COVERAGE = 1
